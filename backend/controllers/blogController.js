@@ -53,6 +53,9 @@ exports.updateBlog = catchAsyncError(async (req,res,next) => {
     if(!blog){
         return next(new ErrorHander("Blog not found!!",404));
     }
+    if(blog.user !== req.user.id){
+        return next(new ErrorHander("You can not edit this blog.",401));
+    }
 
     blog = await Blog.findByIdAndUpdate(req.params.id,req.body,{
         new:true,
@@ -72,6 +75,10 @@ exports.deleteBlog = catchAsyncError(async (req,res,next) => {
     let blog = await Blog.findById(req.params.id);
     if(!blog){
         return next(new ErrorHander("Blog not found!!",404));
+    }
+
+    if(blog.user !== req.user.id){
+        return next(new ErrorHander("You can not delete this blog.",401));
     }
 
     const user = await User.findById(req.user.id);

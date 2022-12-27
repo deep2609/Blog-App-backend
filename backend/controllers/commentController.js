@@ -63,6 +63,9 @@ exports.updateComment = catchAsyncError(async (req,res,next) => {
     if(!comment){
         return next(new ErrorHander("Comment not found!!",404));
     }
+    if(comment.user !== req.user.id){
+        return next(new ErrorHander("You can not edit this comment.",401));
+    }
 
     comment = await Comment.findByIdAndUpdate(req.params.id,req.body,{
         new:true,
@@ -82,6 +85,10 @@ exports.deleteComment = catchAsyncError(async (req,res,next) => {
     let comment = await Comment.findById(req.params.id);
     if(!comment){
         return next(new ErrorHander("Comment not found!!",404));
+    }
+
+    if(comment.user !== req.user.id){
+        return next(new ErrorHander("You can not delete this comment.",401));
     }
 
     const user = await User.findById(req.user.id);
