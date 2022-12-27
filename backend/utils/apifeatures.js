@@ -15,6 +15,7 @@ class ApiFeatures{
        this.query = this.query.find({...keyword});
        return this;
     }
+
     filter(){
       const category = this.queryStr.category ? {
          category : {
@@ -25,25 +26,26 @@ class ApiFeatures{
       this.query = this.query.find({...category});
       return this;
     }
+
     orderBy(){
       let orderBy = {};
-
+      let type = this.queryStr.type || "desc";
       if(!this.queryStr.orderBy){
          orderBy = {}
       }
       else if(this.queryStr.orderBy === "likes"){
          orderBy = {
-            likesCount : -1
+            likesCount : (type=="desc"?-1:1)
          }
       }
       else if(this.queryStr.orderBy === "comments"){
          orderBy = {
-            commentsCount : -1
+            commentsCount : (type=="desc"?-1:1)
          }
       }
       else if(this.queryStr.orderBy === "date"){
          orderBy = {
-            createdAt : -1
+            createdAt : (type=="desc"?-1:1)
          }
       }
       else{
@@ -53,6 +55,7 @@ class ApiFeatures{
       
       return this;
     }
+    
     pagination(resultsPerPage){
       const currentPage = Number(this.queryStr.page) || 1;
 

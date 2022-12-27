@@ -9,7 +9,8 @@ const Blog = require("../models/blogModel");
 
 exports.getAllComments = catchAsyncError(async (req,res,next)=>{
     // console.log(JSON.stringify(req.user._id));
-    const apifeatures = new ApiFeatures(Comment.find(),req.query).search();
+    const resultsPerPage = 10;
+    const apifeatures = new ApiFeatures(Comment.find(),req.query).pagination(resultsPerPage);
     const comments = await apifeatures.query;
     res.status(200).json({
         success:true,
@@ -63,7 +64,7 @@ exports.updateComment = catchAsyncError(async (req,res,next) => {
     if(!comment){
         return next(new ErrorHander("Comment not found!!",404));
     }
-    if(comment.user !== req.user.id){
+    if(comment.user != req.user.id){
         return next(new ErrorHander("You can not edit this comment.",401));
     }
 
@@ -87,7 +88,7 @@ exports.deleteComment = catchAsyncError(async (req,res,next) => {
         return next(new ErrorHander("Comment not found!!",404));
     }
 
-    if(comment.user !== req.user.id){
+    if(comment.user != req.user.id){
         return next(new ErrorHander("You can not delete this comment.",401));
     }
 
@@ -98,7 +99,7 @@ exports.deleteComment = catchAsyncError(async (req,res,next) => {
  
     await user.save();
 
-    const blog = await Blog.findById(req.body.blog);
+    const blog = await Blog.findById(comment.blog);
     const blogIndex = blog.comments.indexOf(comment._id);
 
     blog.comments.splice(blogIndex,1);

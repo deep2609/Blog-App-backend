@@ -53,7 +53,7 @@ exports.updateBlog = catchAsyncError(async (req,res,next) => {
     if(!blog){
         return next(new ErrorHander("Blog not found!!",404));
     }
-    if(blog.user !== req.user.id){
+    if(blog.user != req.user.id){
         return next(new ErrorHander("You can not edit this blog.",401));
     }
 
@@ -77,7 +77,7 @@ exports.deleteBlog = catchAsyncError(async (req,res,next) => {
         return next(new ErrorHander("Blog not found!!",404));
     }
 
-    if(blog.user !== req.user.id){
+    if(blog.user != req.user.id){
         return next(new ErrorHander("You can not delete this blog.",401));
     }
 
