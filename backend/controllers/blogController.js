@@ -9,7 +9,7 @@ const User = require("../models/userModel");
 exports.getAllBlogs = catchAsyncError(async (req,res,next)=>{
     // console.log(JSON.stringify(req.user._id));
     const resultsPerPage = 5;
-    const apifeatures = new ApiFeatures(Blog.find(),req.query).search().filter().orderBy().pagination(resultsPerPage);
+    const apifeatures = new ApiFeatures(Blog.find(),req.query).userFilter().search().filter().orderBy().textSearch().pagination(resultsPerPage);
     let blogs = await apifeatures.query;
 
     res.status(200).json({

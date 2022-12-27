@@ -16,6 +16,31 @@ class ApiFeatures{
        return this;
     }
 
+    textSearch(){
+       const textSearch = this.queryStr.textSearch ? {
+         content: {
+            $regex: this.queryStr.textSearch,
+            $options: 'i'
+         }
+       } : {}
+       this.query = this.query.find({...textSearch});
+       return this;
+    }
+
+    userFilter(){
+        let userData = {};
+        if(!this.queryStr.user){
+         userData = {};
+        }
+        else{
+          userData = {
+            user : this.queryStr.user
+          }
+        }
+        this.query = this.query.find({...userData});
+        return this;
+    }
+
     filter(){
       const category = this.queryStr.category ? {
          category : {
@@ -55,7 +80,7 @@ class ApiFeatures{
       
       return this;
     }
-    
+
     pagination(resultsPerPage){
       const currentPage = Number(this.queryStr.page) || 1;
 
